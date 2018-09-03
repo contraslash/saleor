@@ -1,80 +1,87 @@
-[![Saleor](http://getsaleor.com/mr-saleor-readme.png)](http://getsaleor.com)
-
 # Saleor
 
-[![Build Status](https://travis-ci.org/mirumee/saleor.svg?branch=master)](https://travis-ci.org/mirumee/saleor)
-[![codecov.io](http://codecov.io/github/mirumee/saleor/coverage.svg?branch=master)](http://codecov.io/github/mirumee/saleor?branch=master)
-[![Join the chat at https://gitter.im/mirumee/saleor](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mirumee/saleor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Twitter URL](.github/badges/twitter.svg)](https://twitter.com/getsaleor) 
+This is an extension for Saleor Project, aiming to improve the test inside the project
 
-Saleor is a high-performance e-commerce solution created with Python and Django.
+## Install with conda
+```bash
+conda create --name saleor python=3.5
+source activate saleor
 
-We believe that better service-based architecture means productive developers, trying to keep it simple, lightweight, and modular.
+# Installing nodejs
+conda install -c conda-forge nodejs 
+# Installing postgres
+# conda install -c anaconda postgresql 
 
-Built with top-notch technologies. Django, PostgreSQL, ElasticSearch, GraphQL and Docker.
+# Installing extra requirements
+conda install -c anaconda cffi 
+conda install -c anaconda cairo
+conda install -c conda-forge pango 
+conda install -c conda-forge gdk-pixbuf 
+conda install -c conda-forge libffi 
+conda install -c conda-forge uwsgi 
 
-[Visit our homepage to find out more](http://getsaleor.com/)
 
-# Getting started
+# Installing pip requirements
+pip install -r requirements.txt
+```
 
-## 💾 Installation and requirements
+As much as I like anaconda, somethings really need to be executed with other options, like docker in case for create postgres database and server
+for multiplatform configurations
 
-Saleor requires Python 3.5+, Node.js 10.0+, PostgreSQL and OS-specific dependency tools.
+```bash
+docker run \
+    --name postgres \
+    -e POSTGRES_PASSWORD=your_secret_password \
+    -v ${PWD}/pgdata:/var/lib/postgresql/data \
+    -p 5432:5432 \
+    -d postgres:9.6.8-alpine
 
-[See the Saleor docs](https://saleor.readthedocs.io) for step-by-step installation and deployment instructions.
+psql -h localhost -p 5432 -U postgres
+# And type your_secret_password from the postgres run command
+```
 
-## ▶️ Demo
+Then configure the database
 
-Want to see Saleor in action?
+```SQL
+CREATE role saleor noinherit login password 'saleor_password';
+CREATE DATABASE saleordb owner saleor;
+ALTER USER saleor CREATEDB;
+-- For testing purposes this user must be super user, to create and modify databases
+ALTER USER saleor superuser;
+-- to quit
+\q; 
+```
 
-[View Storefront](http://demo.getsaleor.com/) | [View Dashboard (admin area)](http://demo.getsaleor.com/dashboard/)
+Now Saleor recommends to use a secret key, but the objective of this project is not about securing things, not at this level, therefore we define a default value for `SECRET_KEY` but you can have your own using
 
-Or launch the demo on a free Heroku instance.
+```bash
+export SECRET_KEY='<mysecretkey>'
+```
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+And also remember to add this variable on `.bashrc`, `.profile` or equivalent.
 
-Login credentials: `admin@example.com`/`admin`
+Now you're safe to migrate
 
-# Get involved
+```bash
+python manage.py migrate
+```
 
-## ❤️ Community
+Now we have to build the front end, personally I hate projects merging front end and backend on a single repository, but seems to be a trend using
+ReactJS with django, rendering JSX with django directly, don't know, just don't like
 
-* Join the chat on [gitter](https://gitter.im/mirumee/saleor)
-* Follow us on [Twitter](https://twitter.com/getsaleor?lang=en)
-* Check our latest blog posts on [Medium](https://medium.com/saleor)
+```bash
+npm install
+```
 
-## 🎁 Contribute
-Any contributions are warmly welcomed, we will do our best to provide you with mentorship and support throughout the whole collaboration.
+Also usually I recommend to use `npm audit fix` and that could be a static recommendation, but whatsoever
 
-If you are looking for an issue to tackle, take a look at issues labelled
-[`Help Wanted`](https://github.com/mirumee/saleor/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22).
+```bash
+npm run build-assets
+npm run build-emails
+```
 
-Some of them however might not be listed yet. Check [our roadmap](https://github.com/mirumee/saleor/projects/6) or if you think of your own feature, then drop us a message and we will discuss the most efficient way to handle it!
+Now saleor should run smoothly
 
-If you have any ideas, just [open an issue](https://github.com/mirumee/saleor/issues/new) and tell us what you think!
-
-Get more details in our [Contributing Guide](https://saleor.readthedocs.io/en/latest/contributing.html).
-
-## 🌎 Translate
-
-Did you know that Saleor is available in almost 30 languages, translated entirely by our community?
-
-If you'd like to help us, you can join one of our translation teams on [the localization platform Transifex](https://www.transifex.com/mirumee/saleor-1/languages/).
-
-The repository gets synchronized weekly with the latest contributions. 
-
-## 📝 Your feedback
-
-Do you use Saleor as an e-commerce platform?
-Fill out this short survey and help us grow. It will take just a minute, but mean a lot!
-
-[Take a survey](https://mirumee.typeform.com/to/sOIJbJ)
-
-# Commercial support
-
-Disclaimer: everything you see here is open and free to use as long as you comply with the [license](LICENSE). It is not bait to force you to pay us later and we promise to do our best to fix bugs and improve the code.
-
-Some situations however call for extra code being written. Whether you need us to cover an exotic use case or build you a custom e-commerce appliance, our team can help.
-
-#### Crafted with ❤️ by [Mirumee Software](http://mirumee.com)
-hello@mirumee.com
+```bash
+python manage.py runserver
+```

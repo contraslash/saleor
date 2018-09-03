@@ -51,8 +51,10 @@ CACHES = {'default': django_cache_url.config()}
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgres://saleor:saleor@localhost:5432/saleor',
-        conn_max_age=600)}
+        default='postgres://saleor:saleor_password@localhost:5432/saleordb',
+        conn_max_age=600
+    )
+}
 
 
 TIME_ZONE = 'America/Chicago'
@@ -160,7 +162,7 @@ TEMPLATES = [{
         'string_if_invalid': '<< MISSING VARIABLE "%s" >>' if DEBUG else ''}}]
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', "some-random-string-or-whatever")
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
