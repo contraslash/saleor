@@ -50,6 +50,8 @@ class Shop(graphene.ObjectType):
         required=True)
     default_currency = graphene.String(
         description='Default shop\'s currency.', required=True)
+    default_country = graphene.Field(
+        CountryDisplay, description='Default shop\'s country')
     description = graphene.String(description='Shop\'s description.')
     domain = graphene.Field(
         Domain, required=True, description='Shop\'s domain data.')
@@ -144,3 +146,14 @@ class Shop(graphene.ObjectType):
 
     def resolve_default_weight_unit(self, info):
         return info.context.site.settings.default_weight_unit
+
+    def resolve_default_country(self, info):
+        default_country = [
+            c for c in countries if c[0] == settings.DEFAULT_COUNTRY]
+        if default_country:
+            default_country = default_country[0]
+            default_country = CountryDisplay(
+                code=default_country[0], country=default_country[1])
+        else:
+            default_country = None
+        return default_country
