@@ -49,7 +49,7 @@ ALTER USER saleor CREATEDB;
 -- For testing purposes this user must be super user, to create and modify databases
 ALTER USER saleor superuser;
 -- to quit
-\q; 
+\q
 ```
 
 Now Saleor recommends to use a secret key, but the objective of this project is not about securing things, not at this level, therefore we define a default value for `SECRET_KEY` but you can have your own using

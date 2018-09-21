@@ -5,7 +5,7 @@ from django.urls import reverse
 from django_countries.fields import Country
 from payments import FraudStatus, PaymentStatus
 from prices import Money, TaxedMoney
-from tests.utils import get_redirect_location
+from asd_tests.utils import get_redirect_location
 
 from saleor.account.models import User
 from saleor.checkout.utils import create_order

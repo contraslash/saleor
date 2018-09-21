@@ -6,7 +6,7 @@ from django.forms import HiddenInput
 from django.forms.models import model_to_dict
 from django.urls import reverse
 from prices import Money, MoneyRange, TaxedMoney, TaxedMoneyRange
-from tests.utils import get_redirect_location
+from asd_tests.utils import get_redirect_location
 
 from saleor.dashboard.product import ProductBulkAction
 from saleor.dashboard.product.forms import ProductForm, ProductVariantForm

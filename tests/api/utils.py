@@ -1,6 +1,6 @@
 import json
 
-from tests.utils import get_graphql_content
+from asd_tests.utils import get_graphql_content
 
 from saleor.graphql.core.utils import snake_to_camel_case
 

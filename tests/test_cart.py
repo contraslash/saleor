@@ -140,7 +140,13 @@ def test_get_or_create_cart_from_request(
 
 
 def test_get_cart_from_request(
-        monkeypatch, customer_user, cart_request_factory):
+    monkeypatch,
+    customer_user,
+    cart_request_factory
+):
+    """
+    PDP.M1 
+    """
     queryset = Cart.objects.all()
     token = uuid4()
     request = cart_request_factory(user=customer_user, token=token)

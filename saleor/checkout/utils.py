@@ -95,7 +95,9 @@ def get_prices_of_discounted_products(lines, discounted_products):
 
 
 def get_prices_of_products_in_discounted_collections(
-        lines, discounted_collections):
+    lines,
+    discounted_collections
+):
     """Get prices of variants belonging to the discounted collections."""
     # If there's no discounted collections,
     # it means that all of them are discounted
@@ -110,7 +112,9 @@ def get_prices_of_products_in_discounted_collections(
 
 
 def get_prices_of_products_in_discounted_categories(
-        lines, discounted_categories):
+    lines,
+    discounted_categories
+):
     """Get prices of variants belonging to the discounted categories.
 
     Product must be assigned directly to the discounted category, assigning
@@ -198,9 +202,15 @@ def get_or_create_cart_from_request(request, cart_queryset=Cart.objects.all()):
 
 
 def get_cart_from_request(request, cart_queryset=Cart.objects.all()):
-    """Fetch cart from database or return a new instance based on cookie."""
+    """
+    PDP.M1
+    Fetch cart from database or return a new instance based on cookie.
+    """
     if request.user.is_authenticated:
-        cart = get_user_cart(request.user, cart_queryset)
+        cart = get_user_cart(
+            request.user,
+            cart_queryset
+        )
         user = request.user
     else:
         token = request.get_signed_cookie(COOKIE_NAME, default=None)
@@ -210,6 +220,7 @@ def get_cart_from_request(request, cart_queryset=Cart.objects.all()):
         return cart
     if user:
         return Cart(user=user)
+
     return Cart()
 
 
@@ -344,44 +355,78 @@ def add_variant_to_cart(
 
 
 def get_shipping_address_forms(cart, user_addresses, data, country):
-    """Forms initialized with data depending on shipping address in cart."""
+    """
+    PDP.M2
+    Forms initialized with data depending on shipping address in cart.
+    """
     shipping_address = (
-        cart.shipping_address or cart.user.default_shipping_address)
+        cart.shipping_address or cart.user.default_shipping_address
+    )
 
     if shipping_address and shipping_address in user_addresses:
         address_form, preview = get_address_form(
-            data, country_code=country.code,
-            initial={'country': country})
+            data,
+            country_code=country.code,
+            initial={
+                'country': country
+            }
+        )
         addresses_form = AddressChoiceForm(
-            data, addresses=user_addresses,
-            initial={'address': shipping_address.id})
+            data,
+            addresses=user_addresses,
+            initial={
+                'address': shipping_address.id
+            }
+        )
     elif shipping_address:
         address_form, preview = get_address_form(
-            data, country_code=shipping_address.country.code,
-            instance=shipping_address)
+            data,
+            country_code=shipping_address.country.code,
+            instance=shipping_address
+        )
         addresses_form = AddressChoiceForm(
             data, addresses=user_addresses)
     else:
         address_form, preview = get_address_form(
-            data, country_code=country.code,
-            initial={'country': country})
+            data,
+            country_code=country.code,
+            initial={
+                'country': country
+            }
+        )
         addresses_form = AddressChoiceForm(
-            data, addresses=user_addresses)
+            data,
+            addresses=user_addresses
+        )
 
     return address_form, addresses_form, preview
 
 
-def update_shipping_address_in_cart(cart, user_addresses, data, country):
-    """Return shipping address choice forms and if an address was updated."""
+def update_shipping_address_in_cart(
+    cart,
+    user_addresses,
+    data,
+    country
+):
+    """
+    PDP.M3
+    Return shipping address choice forms and if an address was updated.
+    """
     address_form, addresses_form, preview = (
-        get_shipping_address_forms(cart, user_addresses, data, country))
+        get_shipping_address_forms(
+            cart,
+            user_addresses,
+            data,
+            country)
+    )
 
     updated = False
 
     if addresses_form.is_valid() and not preview:
         use_existing_address = (
             addresses_form.cleaned_data['address'] !=
-            AddressChoiceForm.NEW_ADDRESS)
+            AddressChoiceForm.NEW_ADDRESS
+        )
 
         if use_existing_address:
             address_id = addresses_form.cleaned_data['address']
@@ -418,8 +463,16 @@ def update_shipping_address_in_anonymous_cart(cart, data, country):
     return user_form, address_form, updated
 
 
-def get_billing_forms_with_shipping(cart, data, user_addresses, country):
-    """Get billing form based on a the current billing and shipping data."""
+def get_billing_forms_with_shipping(
+    cart,
+    data,
+    user_addresses,
+    country
+):
+    """
+    PDP.M4
+    Get billing form based on a the current billing and shipping data.
+    """
     shipping_address = cart.shipping_address
     billing_address = cart.billing_address or Address(country=country)
 
@@ -453,8 +506,15 @@ def get_billing_forms_with_shipping(cart, data, user_addresses, country):
 
 
 def update_billing_address_in_cart_with_shipping(
-        cart, user_addresses, data, country):
-    """Return shipping address choice forms and if an address was updated."""
+    cart,
+    user_addresses,
+    data,
+    country
+):
+    """
+    PDP.M5
+    Return shipping address choice forms and if an address was updated.
+    """
     address_form, addresses_form, preview = get_billing_forms_with_shipping(
         cart, data, user_addresses, country)
 
@@ -514,8 +574,16 @@ def update_billing_address_in_anonymous_cart(cart, data, country):
     return user_form, address_form, updated
 
 
-def get_summary_without_shipping_forms(cart, user_addresses, data, country):
-    """Forms initialized with data depending on addresses in cart."""
+def get_summary_without_shipping_forms(
+    cart,
+    user_addresses,
+    data,
+    country
+):
+    """
+    PDP.M6
+    Forms initialized with data depending on addresses in cart.
+    """
     billing_address = cart.billing_address
 
     if billing_address and billing_address in user_addresses:
@@ -549,11 +617,24 @@ def get_summary_without_shipping_forms(cart, user_addresses, data, country):
     return address_form, addresses_form, preview
 
 
-def update_billing_address_in_cart(cart, user_addresses, data, country):
-    """Return shipping address choice forms and if an address was updated."""
+def update_billing_address_in_cart(
+    cart,
+    user_addresses,
+    data,
+    country
+):
+    """
+    PDP.M7
+    Return shipping address choice forms and if an address was updated.
+    """
     address_form, addresses_form, preview = (
         get_summary_without_shipping_forms(
-            cart, user_addresses, data, country))
+            cart,
+            user_addresses,
+            data,
+            country
+        )
+    )
 
     updated = False
 
@@ -712,7 +793,9 @@ def get_voucher_for_cart(cart, vouchers=None):
 
 
 def recalculate_cart_discount(cart, discounts, taxes):
-    """Recalculate `cart.discount` based on the voucher.
+    """
+    PDP.M8
+    Recalculate `cart.discount` based on the voucher.
 
     Will clear both voucher and discount if the discount is no longer
     applicable.
@@ -770,7 +853,9 @@ def value_in_range(minimum, maximum, value):
 
 
 def shipping_method_applicable(price, weight, method):
-    """Checks if all shipping method requirements are fullfilled
+    """
+    PDP.M10
+    Checks if all shipping method requirements are fullfilled
     (eg. minimum order value or maximum order weight).
     """
     if method.type == ShippingMethodType.PRICE_BASED:
@@ -782,8 +867,15 @@ def shipping_method_applicable(price, weight, method):
         maximum=method.maximum_order_weight, value=weight)
 
 
-def is_valid_shipping_method(cart, taxes, discounts):
-    """Check if shipping method is valid and remove (if not)."""
+def is_valid_shipping_method(
+    cart,
+    taxes,
+    discounts
+):
+    """
+    PDP.M9
+    Check if shipping method is valid and remove (if not).
+    """
     if not cart.shipping_method:
         return False
     shipping_outside_the_shipping_zone = (

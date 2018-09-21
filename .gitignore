@@ -34,3 +34,4 @@ webpack-bundle.json
 !/templates/templated_email/compiled/.gitkeep
 
 pg_data
+pgdata

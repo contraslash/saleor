@@ -18,7 +18,7 @@ from saleor.order.models import Order, OrderLine
 from saleor.order.utils import add_variant_to_order, change_order_line_quantity
 from saleor.product.models import ProductVariant
 from saleor.shipping.models import ShippingZone
-from tests.utils import get_form_errors, get_redirect_location
+from asd_tests.utils import get_form_errors, get_redirect_location
 
 
 def test_ajax_order_shipping_methods_list(
