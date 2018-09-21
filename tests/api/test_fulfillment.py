@@ -2,7 +2,7 @@ import json
 
 import graphene
 from django.shortcuts import reverse
-from asd_tests.utils import get_graphql_content
+from tests.utils import get_graphql_content
 
 from saleor.order.models import FulfillmentStatus
 

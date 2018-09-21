@@ -5,7 +5,7 @@ import graphene
 from django.conf import settings
 from django.shortcuts import reverse
 from django_countries import countries
-from asd_tests.utils import get_graphql_content
+from tests.utils import get_graphql_content
 
 from saleor.core.permissions import MODELS_PERMISSIONS
 from saleor.site.models import Site

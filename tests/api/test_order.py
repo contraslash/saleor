@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, Mock
 import graphene
 import pytest
 from django.shortcuts import reverse
-from asd_tests.utils import get_graphql_content
+from tests.utils import get_graphql_content
 
 from saleor.account.models import Address
 from saleor.graphql.order.mutations.draft_orders import (

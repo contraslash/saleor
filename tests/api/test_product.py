@@ -7,7 +7,7 @@ from django.shortcuts import reverse
 from django.utils.text import slugify
 from graphql_relay import to_global_id
 from prices import Money
-from asd_tests.utils import (
+from tests.utils import (
     create_image, create_pdf_file_with_image_ext, get_graphql_content)
 
 from saleor.core import TaxRateType

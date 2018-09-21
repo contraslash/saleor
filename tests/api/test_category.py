@@ -4,7 +4,7 @@ import graphene
 import pytest
 from django.shortcuts import reverse
 from django.template.defaultfilters import slugify
-from asd_tests.utils import get_graphql_content
+from tests.utils import get_graphql_content
 
 from saleor.product.models import Category
 
