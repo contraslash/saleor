@@ -354,7 +354,12 @@ def add_variant_to_cart(
     update_cart_quantity(cart)
 
 
-def get_shipping_address_forms(cart, user_addresses, data, country):
+def get_shipping_address_forms(
+    cart,
+    user_addresses,
+    data,
+    country
+):
     """
     PDP.M2
     Forms initialized with data depending on shipping address in cart.
@@ -475,7 +480,6 @@ def get_billing_forms_with_shipping(
     """
     shipping_address = cart.shipping_address
     billing_address = cart.billing_address or Address(country=country)
-
     if not billing_address.id or billing_address == shipping_address:
         address_form, preview = get_address_form(
             data, country_code=shipping_address.country.code,
@@ -877,20 +881,24 @@ def is_valid_shipping_method(
     Check if shipping method is valid and remove (if not).
     """
     if not cart.shipping_method:
+        print("Fails for no shipment method")
         return False
     shipping_outside_the_shipping_zone = (
         cart.shipping_address.country.code not in
         cart.shipping_method.shipping_zone.countries)
     if shipping_outside_the_shipping_zone:
         clear_shipping_method(cart)
+        print("Fails for not on shiping zone")
         return False
 
     is_valid_shipping = shipping_method_applicable(
         price=cart.get_subtotal(discounts, taxes).gross,
         weight=cart.get_total_weight(), method=cart.shipping_method)
     if not is_valid_shipping:
+        print("Fail not valid shiping")
         clear_shipping_method(cart)
         return False
+    print("Everything is fine")
     return True
 
 
